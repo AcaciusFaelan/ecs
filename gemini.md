@@ -28,6 +28,11 @@
         - **Subject:** Imperative mood, <50 chars.
         - **Body:** Detailed explanation (optional, <72 chars/line).
         - **Footer:** Reference issues/breaking changes.
+    - **End of Session:**
+        - **Trigger:** "End of session" (or similar).
+        - **Scope:** Current session history.
+        - **Action:** Write session context to `gemini.md`.
+        - **Commit:** Make appropriate git commit with defined action.
 
 ## Session Summary (Jan 6, 2026)
 - Initial setup of the project context file.
@@ -35,3 +40,4 @@
 - User defined strict rules against code generation/modification to focus on learning.
 - User defined specific criteria for conceptual explanations.
 - User defined specific criteria for Git commit generation.
+- User defined "End of session" action to automate context saving and committing.
