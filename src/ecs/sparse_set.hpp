@@ -2,6 +2,7 @@
 
 #include "definitions.hpp"
 
+#include <cstddef>
 #include <vector>
 
 namespace ecs {
@@ -31,10 +32,30 @@ namespace ecs {
   void SparseSet<T>::add(Entity entity, T component) {
     if (entity >= sparse.size())
       sparse.resize(entity + 1, NULL_ENTITY);
-      
+
     sparse[entity] = dense.size();
 
     dense.push_back(component);
     indices.push_back(entity);
+  }
+
+  template <typename T>
+  void SparseSet<T>::remove(Entity entity) {
+    if (dense.empty() || sparse[entity] == NULL_ENTITY)
+      return;
+
+    size_t holeIndex = sparse[entity];
+    size_t lastIndex = dense.size() - 1;
+    size_t swappedEntity = indices[lastIndex];
+
+    dense[holeIndex] = dense[lastIndex];
+    indices[holeIndex] = indices[lastIndex];
+
+    sparse[entity] = NULL_ENTITY;
+
+    dense.pop_back();
+    indices.pop_back();
+
+    sparse[swappedEntity] = holeIndex;
   }
 } // namespace: ecs

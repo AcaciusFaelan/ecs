@@ -51,3 +51,10 @@
 - Discussed "Driver" sets in Views to optimize iteration performance.
 - Clarified C++ template patterns, header-only implementation requirements, and vector memory management.
 - Fixed a logic bug in `SparseSet::add` where the dense index was calculated before insertion.
+
+## Session Summary (Jan 13, 2026)
+- Reviewed pseudocode in `notes.txt` for `SparseSet::remove` logic ("Swap and Pop").
+- Identified a missing step in the initial pseudocode: updating the `sparse` index for the moved/swapped entity.
+- Verified the corrected pseudocode which included `sparse[swappedEntity] = holeIndex`.
+- Validated the actual implementation in `src/ecs/sparse_set.hpp`, confirming it correctly implements the optimized "overwrite and pop" strategy.
+- Recommended adding an existence check (`sparse[entity] == NULL_ENTITY`) at the start of `remove` to prevent segfaults on invalid entity removal.
