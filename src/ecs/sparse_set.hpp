@@ -58,4 +58,17 @@ namespace ecs {
 
     sparse[swappedEntity] = holeIndex;
   }
+
+  template <typename T>
+  T* SparseSet<T>::get(Entity entity) {
+    if (entity >= sparse.size() || sparse[entity] == NULL_ENTITY)
+      return nullptr;
+
+    return &dense[sparse[entity]];
+  }
+
+  template <typename T>
+  bool SparseSet<T>::contains(Entity entity) {
+    return entity < sparse.size() && sparse[entity] != NULL_ENTITY;
+  }
 } // namespace: ecs
