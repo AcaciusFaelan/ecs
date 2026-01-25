@@ -58,3 +58,12 @@
 - Verified the corrected pseudocode which included `sparse[swappedEntity] = holeIndex`.
 - Validated the actual implementation in `src/ecs/sparse_set.hpp`, confirming it correctly implements the optimized "overwrite and pop" strategy.
 - Recommended adding an existence check (`sparse[entity] == NULL_ENTITY`) at the start of `remove` to prevent segfaults on invalid entity removal.
+
+## Session Summary (Jan 25, 2026)
+- Evaluated build script languages (C++ vs Python vs Shell); decided to maintain Shell scripts for simplicity and zero dependencies.
+- Refactored `execute.sh` (Linux) and `execute.bat` (Windows) to include an interactive menu for selecting executables when multiple are found.
+- Fixed a critical bug in `execute.sh` by redirecting menu UI/prompts to stderr, ensuring only the selected file path is captured by stdout.
+- Enabled `CMAKE_EXPORT_COMPILE_COMMANDS` in `CMakeLists.txt` to generate the compilation database for `clangd`.
+- Automated the symbolic linking (Linux) and copying (Windows) of `compile_commands.json` from the build directory to the project root within the execute scripts.
+- Verified and confirmed spelling in `Dependencies.cmake`.
+- Committed and pushed all changes to GitHub.
