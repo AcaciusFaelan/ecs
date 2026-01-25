@@ -43,17 +43,25 @@ find_executable() {
     local exe_files=($(find "$BUILD_DIR" -type f -executable -not -name "*.so*" -not -name "*.a" -not -path "*/CMakeFiles/*" 2>/dev/null))
     
     if [ ${#exe_files[@]} -eq 0 ]; then
-        print_error "No executable found in $BUILD_DIR"
+        print_error "No executable found in $BUILD_DIR" >&2
         exit 1
     elif [ ${#exe_files[@]} -eq 1 ]; then
         echo "${exe_files[0]}"
     else
-        print_warning "Multiple executables found:"
+        print_warning "Multiple executables found. Please select one:" >&2
         for i in "${!exe_files[@]}"; do
-            echo "  $((i+1)). ${exe_files[i]}"
+            echo "  $((i+1)). $(basename "${exe_files[i]}")" >&2
         done
-        echo "Using: ${exe_files[0]}"
-        echo "${exe_files[0]}"
+        
+        local selection
+        while true; do
+            read -p "Enter number (1-${#exe_files[@]}): " selection >&2
+            if [[ "$selection" =~ ^[0-9]+$ ]] && [ "$selection" -ge 1 ] && [ "$selection" -le "${#exe_files[@]}" ]; then
+                echo "${exe_files[$((selection-1))]}"
+                break
+            fi
+            print_error "Invalid selection. Please enter a number between 1 and ${#exe_files[@]}." >&2
+        done
     fi
 }
 
@@ -73,6 +81,11 @@ generate_build_files() {
         exit 1
     }
     cd ..
+    
+    if [ -f "$BUILD_DIR/compile_commands.json" ]; then
+        ln -sf "$BUILD_DIR/compile_commands.json" .
+        print_status "Linked compile_commands.json for clangd"
+    fi
     
     print_status "Build files generated successfully"
 }

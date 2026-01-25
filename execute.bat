@@ -61,6 +61,11 @@ if errorlevel 1 (
 )
 cd ..
 
+if exist "%BUILD_DIR%\compile_commands.json" (
+    copy /y "%BUILD_DIR%\compile_commands.json" . >nul
+    call :print_status "Updated compile_commands.json for clangd"
+)
+
 call :print_status "Build files generated successfully"
 goto :eof
 
@@ -129,12 +134,9 @@ for /r "%BUILD_DIR%" %%f in (*.exe) do (
     REM Skip CMake internal files
     echo !FILE_PATH! | findstr /i "CMakeFiles" >nul
     if errorlevel 1 (
-        if !EXE_COUNT! equ 0 (
-            set "EXE_PATH=%%f"
-        ) else (
-            call :print_warning "Multiple executables found, using first: !EXE_PATH!"
-        )
         set /a EXE_COUNT+=1
+        set "EXE_LIST_!EXE_COUNT!=%%f"
+        set "EXE_NAME_!EXE_COUNT!=%%~nxf"
     )
 )
 
@@ -143,6 +145,26 @@ if !EXE_COUNT! equ 0 (
     exit /b 1
 )
 
+if !EXE_COUNT! equ 1 (
+    set "EXE_PATH=!EXE_LIST_1!"
+    goto :eof
+)
+
+call :print_warning "Multiple executables found. Please select one:"
+for /L %%i in (1,1,!EXE_COUNT!) do (
+    echo   %%i. !EXE_NAME_%%i!
+)
+
+:ask_selection
+set /p "SELECTION=Enter number (1-!EXE_COUNT!): "
+
+REM Simple validation checking if the index variable exists
+if not defined EXE_LIST_!SELECTION! (
+    call :print_error "Invalid selection. Please try again."
+    goto ask_selection
+)
+
+set "EXE_PATH=!EXE_LIST_!SELECTION!!"
 goto :eof
 
 :show_help
