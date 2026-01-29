@@ -6,8 +6,15 @@
 #include <vector>
 
 namespace ecs {
+
+  class ISparseSet {
+  public:
+    virtual ~ISparseSet() = default;
+    virtual void remove(Entity entity) = 0;
+  };
+
   template <typename T>
-  class SparseSet {
+  class SparseSet : public ISparseSet {
   public:
     void add(Entity entity, T component);
     void remove(Entity entity);

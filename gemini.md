@@ -67,3 +67,11 @@
 - Automated the symbolic linking (Linux) and copying (Windows) of `compile_commands.json` from the build directory to the project root within the execute scripts.
 - Verified and confirmed spelling in `Dependencies.cmake`.
 - Committed and pushed all changes to GitHub.
+
+## Session Summary (Jan 29, 2026)
+- Refined the `Registry` implementation in `src/ecs/registry.hpp`, focusing on robust type-erased storage.
+- Resolved critical bugs in `Registry` methods: fixed return type mismatches (moving from `T&` to `T*`), addressed potential segmentation faults by ensuring pool existence checks before access, and corrected template specialization syntax.
+- Optimized map access patterns by replacing double lookups (`find` + `operator[]`) with iterator-based access (`it->second`) to improve performance and enable `const` safety.
+- Discussed and planned the use of `std::unordered_map::emplace` with lazy initialization for efficient component pool creation.
+- Evaluated Entity ID strategies: decided to proceed with an incremental counter for initial development while planning for future implementation of recycling with versioning.
+- Established a testing strategy using `<cassert>` for manual unit tests and integrated CTest into `CMakeLists.txt` for automated test discovery and execution.
