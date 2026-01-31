@@ -140,6 +140,22 @@ run_executable() {
     print_status "Execution completed successfully"
 }
 
+# Function to run tests
+run_tests() {
+    print_status "Running tests..."
+    build_app
+    
+    cd "$BUILD_DIR"
+    ctest --output-on-failure || {
+        cd ..
+        print_error "Tests failed"
+        exit 1
+    }
+    cd ..
+    
+    print_status "All tests passed successfully"
+}
+
 # Function to run all steps
 run_all() {
     print_status "Starting complete build process..."
@@ -166,6 +182,9 @@ case "${1:-run}" in
     "execute"|"exec")
         run_executable
         ;;
+    "test")
+        run_tests
+        ;;
     "help"|"-h"|"--help")
         echo "Usage: $0 [command] [executable_name]"
         echo ""
@@ -175,6 +194,7 @@ case "${1:-run}" in
         echo "  build     Build the application only"
         echo "  clean     Clean build directory"
         echo "  execute   Run the executable only"
+        echo "  test      Build and run tests using CTest"
         echo "  help      Show this help message"
         echo ""
         echo "Arguments:"

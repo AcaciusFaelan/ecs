@@ -24,6 +24,7 @@ if /i "%COMMAND%"=="build" goto build_app
 if /i "%COMMAND%"=="clean" goto clean_build
 if /i "%COMMAND%"=="execute" goto run_executable
 if /i "%COMMAND%"=="exec" goto run_executable
+if /i "%COMMAND%"=="test" goto run_tests
 if /i "%COMMAND%"=="help" goto show_help
 if /i "%COMMAND%"=="-h" goto show_help
 if /i "%COMMAND%"=="--help" goto show_help
@@ -167,6 +168,22 @@ if not defined EXE_LIST_!SELECTION! (
 set "EXE_PATH=!EXE_LIST_!SELECTION!!"
 goto :eof
 
+:run_tests
+call :print_status "Running tests..."
+call :build_app
+if errorlevel 1 exit /b 1
+
+cd "%BUILD_DIR%"
+ctest --output-on-failure
+if errorlevel 1 (
+    cd ..
+    call :print_error "Tests failed"
+    exit /b 1
+)
+cd ..
+call :print_status "All tests passed successfully"
+goto :eof
+
 :show_help
 echo Usage: execute.bat [command] [executable_name]
 echo.
@@ -176,6 +193,7 @@ echo   generate  Generate build files only
 echo   build     Build the application only
 echo   clean     Clean build directory
 echo   execute   Run the executable only
+echo   test      Build and run tests using CTest
 echo   help      Show this help message
 echo.
 echo Arguments:
