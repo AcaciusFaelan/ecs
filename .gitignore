@@ -1,4 +1,6 @@
 build
 .cache
 .zed
+.vscode
 compile_commands.json
+doc/compiler
