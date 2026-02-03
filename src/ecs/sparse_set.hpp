@@ -53,17 +53,20 @@ namespace ecs {
 
     size_t holeIndex = sparse[entity];
     size_t lastIndex = dense.size() - 1;
-    size_t swappedEntity = indices[lastIndex];
 
-    dense[holeIndex] = dense[lastIndex];
-    indices[holeIndex] = indices[lastIndex];
+    if (holeIndex != lastIndex) {
+      size_t swappedEntity = indices[lastIndex];
+
+      dense[holeIndex] = dense[lastIndex];
+      indices[holeIndex] = indices[lastIndex];
+
+      sparse[swappedEntity] = holeIndex;
+    }
 
     sparse[entity] = NULL_ENTITY;
 
     dense.pop_back();
     indices.pop_back();
-
-    sparse[swappedEntity] = holeIndex;
   }
 
   template <typename T>

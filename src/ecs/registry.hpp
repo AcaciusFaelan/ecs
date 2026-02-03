@@ -2,6 +2,7 @@
 
 #include "definitions.hpp"
 #include "sparse_set.hpp"
+#include "view.hpp"
 
 #include <unordered_map>
 #include <typeindex>
@@ -27,7 +28,14 @@ namespace ecs {
 
     template<typename T>
     bool has(Entity entity);
+
+    template<typename... Components>
+    View<Components...> view();
+
   private:
+    template<typename T>
+    SparseSet<T>& getOrCreateSparseSet();
+
     Entity nextEntityID = 0;
     std::unordered_map<std::type_index, std::unique_ptr<ISparseSet>> componentSets;
   }; // class: Registry
@@ -37,14 +45,19 @@ namespace ecs {
   }
 
   template<typename T>
-  void Registry::add(Entity entity, T component) {
+  SparseSet<T>& Registry::getOrCreateSparseSet() {
     auto [it, inserted] = componentSets.emplace(typeid(T), nullptr);
 
     if (inserted || !it->second) {
       it->second = std::make_unique<SparseSet<T>>();
     }
 
-    static_cast<SparseSet<T>*>(it->second.get())->add(entity, component);
+    return *static_cast<SparseSet<T>*>(it->second.get());
+  }
+
+  template<typename T>
+  void Registry::add(Entity entity, T component) {
+    getOrCreateSparseSet<T>().add(entity, component);
   }
 
   template<typename T>
@@ -70,5 +83,10 @@ namespace ecs {
       return static_cast<SparseSet<T>*>(it->second.get())->contains(entity);
     
     return false;
+  }
+
+  template<typename... Components>
+  View<Components...> Registry::view() {
+    return View<Components...>(getOrCreateSparseSet<Components>()...);
   }
 } // namespace: ecs
