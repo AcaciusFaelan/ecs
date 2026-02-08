@@ -3,4 +3,11 @@ build
 .zed
 .vscode
 compile_commands.json
-doc/compiler
+doc/main.aux
+doc/main.fdb_latexmk
+doc/main.fls
+doc/main.log
+doc/main.pdf
+doc/main.synctex.gz
+doc/main.toc
+doc/main.xdv
