@@ -1,25 +1,36 @@
-% xelatex latex compiler needed to compile
+% xelatex or lualatex latex compiler needed
 \documentclass[12pt]{report}
 \usepackage{geometry}
 \usepackage{fontspec}
 \usepackage{xcolor}
 \usepackage{setspace}
 
+% ------ Languange Settings ------
+\usepackage{polyglossia}
+\setmainlanguage[variant=british]{english}
+
+% ------ Font Settings ------
 \setmainfont{Liberation Sans}
+
+% ------ Page Layout Settings ------
 \onehalfspacing
 \geometry{left=3cm, right=3cm, top=2cm, bottom=2cm}
 
+% ------ Title Definition ------
 \title{ETI Term Paper - Entity Component System}
 \author{Noah Kluge}
 \date{February 2026}
 
+% ------ Begin of the Document ------
 \begin{document}
-\color{black}
 \maketitle
+\pagenumbering{gobble}
 \newpage
-
-\setcounter{page}{0}
-\pagestyle{plain}
 \tableofcontents
 \newpage
+\pagenumbering{arabic}
+
+% Every section MUST be inside a chapter in 'report' class to avoid the 0.x numbering
+\chapter{Introduction}
+
 \end{document}
