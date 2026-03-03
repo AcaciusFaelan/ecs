@@ -1,66 +1,95 @@
-% xelatex or lualatex latex compiler needed
-\documentclass[12pt]{article}
+% lualatex compiler required
+\documentclass[12pt, a4paper]{article}
+
+% ------ Project Metadata ------
+\newcommand{\projectNameShort}{ECS}
+\newcommand{\projectName}{Entity Component System (\projectNameShort)}
+\newcommand{\projectType}{ETI Facharbeit}
+\newcommand{\projectVersion}{v0.1}
+\newcommand{\projectAuthor}{Noah Kluge}
+\newcommand{\projectDate}{February 2026}
+\newcommand{\schoolLogo}{assets/bztg-logo.png}
+
+% ------ Packages ------
 \usepackage{geometry}
 \usepackage{fontspec}
 \usepackage{xcolor}
 \usepackage{setspace}
-\usepackage{hyperref}
 \usepackage{fancyhdr}
+\usepackage{polyglossia}
+\usepackage{graphicx}
 
-% ------ Hyperlink Settings ------
+% ------ Language & Font Settings ------
+\setmainlanguage{german}
+\setmainfont{Liberation Sans}
+
+% ------ Page Layout Settings ------
+\onehalfspacing
+\geometry{
+    left=3cm,
+    right=3cm,
+    top=2.5cm,
+    bottom=2cm,
+    headheight=48pt
+}
+\pagestyle{fancy}
+\fancyhf{} % Clears default settings
+
+% Header Configuration
+\fancyhead[L]{\projectNameShort}
+\fancyhead[C]{\rightmark}
+\fancyhead[R]{\includegraphics[height=1.2cm]{\schoolLogo}} % Image in the right corner
+
+% Footer Configuration
+\fancyfoot[L]{\thepage}
+\fancyfoot[C]{}
+\fancyfoot[R]{Draft \projectVersion}
+
+% Rule Thickness
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+% ------ Hyperlink Settings (Load Last) ------
+\usepackage{hyperref}
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
     filecolor=magenta,
     urlcolor=cyan,
-    pdftitle={Your Document Title},
+    pdftitle={\projectName},
+    pdfauthor={\projectAuthor}
 }
 
-% ------ Languange Settings ------
-\usepackage{polyglossia}
-\setmainlanguage[variant=german]{german}
-
-% ------ Font Settings ------
-\setmainfont{Liberation Sans}
-
-% ------ Page Layout Settings ------
-\onehalfspacing
-\geometry{left=3cm, right=3cm, top=2cm, bottom=2cm}
-\pagestyle{fancy}
-\fancyhf{} % Clears default settings
-
-% Header Configuration
-\fancyhead[L]{\projectName} % Left header
-\fancyhead[C]{}                  % Center header
-\fancyhead[R]{\rightmark}        % Right header (displays current section)
-
-% Footer Configuration
-\fancyfoot[L]{}                  % Left footer
-\fancyfoot[C]{\thepage}          % Center footer (page number)
-\fancyfoot[R]{Draft \projectVersion}        % Right footer
-
-% Add a horizontal line
-\renewcommand{\headrulewidth}{0.4pt} % Header line thickness
-\renewcommand{\footrulewidth}{0.4pt} % Footer line thickness
-
-% ------ Title Definition ------
-\title{\projectName}
-\author{Noah Kluge}
-\date{February 2026}
-
-\newcommand{\projectName}{ETI Facharbeit - Entity Component System}
-\newcommand{\projectVersion}{v0.1}
-
-% ------ Begin of the Document ------
+% ------ Document Content ------
 \begin{document}
-\maketitle
+
+% ------ Custom Title Page ------
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+
+    {\Huge \bfseries \projectType \par}
+    {\Huge \bfseries \projectName \par}
+    \vspace{1.5cm}
+
+    % Centered image on the title page
+    \includegraphics[width=1\textwidth]{assets/Title_Img.png}
+
+    \vspace{2cm}
+
+    {\Large \projectAuthor \par}
+    \vfill
+    {\large \projectDate \par}
+    \vspace*{1cm}
+\end{titlepage}
+
 \pagenumbering{gobble}
-\newpage
 \tableofcontents
 \newpage
+
 \pagenumbering{arabic}
 
 \section{Introduction}
-Start of the main section of the Term Paper
+Start of the main section of the Term Paper.
 
 \end{document}

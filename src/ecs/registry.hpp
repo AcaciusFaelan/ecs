@@ -6,7 +6,6 @@
 
 #include <unordered_map>
 #include <typeindex>
-#include <typeinfo>
 #include <memory>
 
 namespace ecs {
@@ -72,7 +71,7 @@ namespace ecs {
     auto it = componentSets.find(typeid(T));
     if (it != componentSets.end())
       return static_cast<SparseSet<T>*>(it->second.get())->get(entity);
-    
+
     return nullptr;
   }
 
@@ -81,7 +80,7 @@ namespace ecs {
     auto it = componentSets.find(typeid(T));
     if (it != componentSets.end())
       return static_cast<SparseSet<T>*>(it->second.get())->contains(entity);
-    
+
     return false;
   }
 
