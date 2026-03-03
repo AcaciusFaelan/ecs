@@ -1,13 +1,24 @@
 % xelatex or lualatex latex compiler needed
-\documentclass[12pt]{report}
+\documentclass[12pt]{article}
 \usepackage{geometry}
 \usepackage{fontspec}
 \usepackage{xcolor}
 \usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+% ------ Hyperlink Settings ------
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={Your Document Title},
+}
 
 % ------ Languange Settings ------
 \usepackage{polyglossia}
-\setmainlanguage[variant=british]{english}
+\setmainlanguage[variant=german]{german}
 
 % ------ Font Settings ------
 \setmainfont{Liberation Sans}
@@ -15,11 +26,30 @@
 % ------ Page Layout Settings ------
 \onehalfspacing
 \geometry{left=3cm, right=3cm, top=2cm, bottom=2cm}
+\pagestyle{fancy}
+\fancyhf{} % Clears default settings
+
+% Header Configuration
+\fancyhead[L]{\projectName} % Left header
+\fancyhead[C]{}                  % Center header
+\fancyhead[R]{\rightmark}        % Right header (displays current section)
+
+% Footer Configuration
+\fancyfoot[L]{}                  % Left footer
+\fancyfoot[C]{\thepage}          % Center footer (page number)
+\fancyfoot[R]{Draft \projectVersion}        % Right footer
+
+% Add a horizontal line
+\renewcommand{\headrulewidth}{0.4pt} % Header line thickness
+\renewcommand{\footrulewidth}{0.4pt} % Footer line thickness
 
 % ------ Title Definition ------
-\title{ETI Term Paper - Entity Component System}
+\title{\projectName}
 \author{Noah Kluge}
 \date{February 2026}
+
+\newcommand{\projectName}{ETI Facharbeit - Entity Component System}
+\newcommand{\projectVersion}{v0.1}
 
 % ------ Begin of the Document ------
 \begin{document}
@@ -30,7 +60,7 @@
 \newpage
 \pagenumbering{arabic}
 
-% Every section MUST be inside a chapter in 'report' class to avoid the 0.x numbering
-\chapter{Introduction}
+\section{Introduction}
+Start of the main section of the Term Paper
 
 \end{document}
