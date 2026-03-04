@@ -1,95 +1,106 @@
-% lualatex compiler required
-\documentclass[12pt, a4paper]{article}
+\documentclass[12pt, a4paper, oneside, ngerman]{scrartcl}
 
-% ------ Project Metadata ------
-\newcommand{\projectNameShort}{ECS}
-\newcommand{\projectName}{Entity Component System (\projectNameShort)}
-\newcommand{\projectType}{ETI Facharbeit}
-\newcommand{\projectVersion}{v0.1}
-\newcommand{\projectAuthor}{Noah Kluge}
-\newcommand{\projectDate}{February 2026}
-\newcommand{\schoolLogo}{assets/bztg-logo.png}
-
-% ------ Packages ------
-\usepackage{geometry}
+% 1. PACKAGES
+\usepackage[left=3cm, right=3cm, top=3cm, bottom=3cm]{geometry}
 \usepackage{fontspec}
-\usepackage{xcolor}
-\usepackage{setspace}
-\usepackage{fancyhdr}
-\usepackage{polyglossia}
+\usepackage[onehalfspacing]{setspace}
+\usepackage[headsepline=false]{scrlayer-scrpage}
+\usepackage{babel}
+\usepackage[most]{tcolorbox}    % For beautiful note boxes
+\usepackage[hidelinks]{hyperref} % Keep this last for best compatibility
 \usepackage{graphicx}
 
-% ------ Language & Font Settings ------
-\setmainlanguage{german}
-\setmainfont{Liberation Sans}
+% 2. FONT SETUP
+\setsansfont{Liberation Sans}
+\renewcommand{\familydefault}{\sfdefault}
 
-% ------ Page Layout Settings ------
-\onehalfspacing
-\geometry{
-    left=3cm,
-    right=3cm,
-    top=2.5cm,
-    bottom=2cm,
-    headheight=48pt
-}
-\pagestyle{fancy}
-\fancyhf{} % Clears default settings
-
-% Header Configuration
-\fancyhead[L]{\projectNameShort}
-\fancyhead[C]{\rightmark}
-\fancyhead[R]{\includegraphics[height=1.2cm]{\schoolLogo}} % Image in the right corner
-
-% Footer Configuration
-\fancyfoot[L]{\thepage}
-\fancyfoot[C]{}
-\fancyfoot[R]{Draft \projectVersion}
-
-% Rule Thickness
-\renewcommand{\headrulewidth}{0.5pt}
-\renewcommand{\footrulewidth}{0.5pt}
-
-% ------ Hyperlink Settings (Load Last) ------
-\usepackage{hyperref}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,
-    urlcolor=cyan,
-    pdftitle={\projectName},
-    pdfauthor={\projectAuthor}
+% 3. TCOLORBOX SETUP (Minimalist Note Box)
+\newtcolorbox{myNote}[1][Hinweis]{
+  colback=gray!5,      % Light gray background
+  colframe=gray!80,    % Darker gray border
+  fonttitle=\bfseries, % Bold title
+  title=#1,            % Default title is "Hinweis"
+  arc=2pt,             % Slightly rounded corners
+  outer arc=2pt,
+  boxrule=0.5pt,       % Thin border
 }
 
-% ------ Document Content ------
+% 4. DEFINE THE TOPIC
+\newcommand{\myTopic}{Thema der Arbeit}
+\newcommand{\myLogo}{\includegraphics[height=1cm]{assets/bztg-logo.png}}
+
+% 5. HEADER/FOOTER STYLES
+\clearpairofpagestyles
+\newpairofpagestyles{directories}{
+    \ihead{\myTopic}
+    \ifoot{\myTopic}
+    \ofoot{}
+}
+\newpairofpagestyles{mainpart}{
+    \ihead{\myTopic}
+    \ohead{\myLogo}
+    \ofoot{\pagemark}
+}
+\newpairofpagestyles{appendixstyle}{
+    \ihead{Anhang}
+    \ohead{\myLogo}
+    \ofoot{\pagemark}
+}
+
 \begin{document}
 
-% ------ Custom Title Page ------
+% --- DECKBLATT ---
 \begin{titlepage}
+    \thispagestyle{empty}
     \centering
-    \vspace*{1cm}
-
-    {\Huge \bfseries \projectType \par}
-    {\Huge \bfseries \projectName \par}
-    \vspace{1.5cm}
-
-    % Centered image on the title page
-    \includegraphics[width=1\textwidth]{assets/Title_Img.png}
-
-    \vspace{2cm}
-
-    {\Large \projectAuthor \par}
+    \vspace*{2cm}
+    \includegraphics[width=1\linewidth]{assets/bztg-logo.png}
     \vfill
-    {\large \projectDate \par}
-    \vspace*{1cm}
+    {\Huge \textbf{\myTopic}}
+    \vfill
+    \today
 \end{titlepage}
 
-\pagenumbering{gobble}
-\tableofcontents
+% --- VERZEICHNISSE ---
 \newpage
+\pagestyle{directories}
+\tableofcontents
+\listoftables
+\listoffigures
 
+% --- HAUPTTEIL ---
+\newpage
+\pagestyle{mainpart}
 \pagenumbering{arabic}
 
-\section{Introduction}
-Start of the main section of the Term Paper.
+\section{Einleitung}
+\subsection{Motivation}
+Es hat damit angefangen, dass ich mich für Spiele Entwicklung interessiert habe.
+Zuerst habe ich mich mit Grafik-APIs auseinander gesetzt.
+Das war allerdings sehr schwer und ich habe mich für Raylib, eine Open-Source Bibliothek, die den Grafikteil übernimmt.
+Ich brauchte aber noch ein System um Objekte im Spiel zu speichern und zu steuern.
+Ich hatte zwei Möglichkeiten.
+Erstens hatte ich Objekt Orientierte Programmierung (OOP).
+Zweitens ein Entity Component System (ECS).
+Ich habe mich für ein ECS entschieden, da es für mich mehr Vorteile als Nachteile hat.
+
+\begin{myNote}
+    Ich werde im Rest dieses Dokuments nur noch die Kurzformen ECS für Entity Component System und OOP für Objekt Orientierte Programmierung.
+\end{myNote}
+
+\section{Analyse}
+Sie können der Box auch einen eigenen Titel geben:
+
+\begin{myNote}[Wichtiger Meilenstein]
+    Dieser Text steht in einer Box mit individuellem Titel.
+\end{myNote}
+
+% --- ANHANG ---
+\newpage
+\appendix
+\pagestyle{appendixstyle}
+\pagenumbering{Roman}
+\section{Anhangs-Abschnitt}
+Test des Anhangs-Layouts.
 
 \end{document}
