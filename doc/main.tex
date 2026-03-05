@@ -25,25 +25,32 @@
   boxrule=0.5pt,       % Thin border
 }
 
-% 4. DEFINE THE TOPIC
-\newcommand{\myTopic}{Thema der Arbeit}
-\newcommand{\myLogo}{\includegraphics[height=1cm]{assets/bztg-logo.png}}
+% 4. DEFINE METADATA
+\newcommand{\ProjectType}{PFI Facharbeit}
+\newcommand{\ProjectTopicShort}{ECS}
+\newcommand{\ProjectTopic}{Entity Component System (\ProjectTopicShort)}
+\newcommand{\SchoolLogo}{\includegraphics[height=1cm]{assets/bztg-logo.png}}
+\newcommand{\ProjectTeacherShort}{RER}
+\newcommand{\ProjectTeacher}{Reimers (\ProjectTeacherShort)}
+\newcommand{\ProjectSubject}{Praxis – Fachpraxis Informationstechnik}
+\newcommand{\ProjectStudent}{Noah Kluge}
 
 % 5. HEADER/FOOTER STYLES
 \clearpairofpagestyles
 \newpairofpagestyles{directories}{
-    \ihead{\myTopic}
-    \ifoot{\myTopic}
+    \ihead{\ProjectTopicShort}
+    \ohead{\SchoolLogo}
+    \ifoot{\ProjectTopic}
     \ofoot{}
 }
 \newpairofpagestyles{mainpart}{
-    \ihead{\myTopic}
-    \ohead{\myLogo}
+    \ihead{\ProjectTopicShort}
+    \ohead{\SchoolLogo}
     \ofoot{\pagemark}
 }
 \newpairofpagestyles{appendixstyle}{
     \ihead{Anhang}
-    \ohead{\myLogo}
+    \ohead{\SchoolLogo}
     \ofoot{\pagemark}
 }
 
@@ -51,14 +58,23 @@
 
 % --- DECKBLATT ---
 \begin{titlepage}
-    \thispagestyle{empty}
-    \centering
-    \vspace*{2cm}
-    \includegraphics[width=1\linewidth]{assets/bztg-logo.png}
-    \vfill
-    {\Huge \textbf{\myTopic}}
-    \vfill
-    \today
+	\thispagestyle{empty}
+	\centering
+	\vspace*{2cm}
+	{\Huge \textbf{\ProjectType}}
+
+	{\Huge \textbf{\ProjectTopic}}
+	\vspace*{5cm}
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{lll}
+			Schüler:         & \ProjectStudent \\
+			Fachlehrer:      & \ProjectTeacher \\
+			Unterrichtsfach: & \ProjectSubject \\
+		\end{tabular}
+	\end{table}
+	\vfill
+	\today
 \end{titlepage}
 
 % --- VERZEICHNISSE ---
@@ -85,15 +101,14 @@ Zweitens ein Entity Component System (ECS).
 Ich habe mich für ein ECS entschieden, da es für mich mehr Vorteile als Nachteile hat.
 
 \begin{myNote}
-    Ich werde im Rest dieses Dokuments nur noch die Kurzformen ECS für Entity Component System und OOP für Objekt Orientierte Programmierung.
+	Ich werde im Rest dieses Dokuments nur noch die Kurzformen ECS für Entity Component System und OOP für Objekt Orientierte Programmierung.
 \end{myNote}
 
-\section{Analyse}
-Sie können der Box auch einen eigenen Titel geben:
+\section{Durchfürung}
+Durchfürung
 
-\begin{myNote}[Wichtiger Meilenstein]
-    Dieser Text steht in einer Box mit individuellem Titel.
-\end{myNote}
+\section{Fazit}
+Fazit
 
 % --- ANHANG ---
 \newpage
