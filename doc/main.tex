@@ -9,6 +9,7 @@
 \usepackage[most]{tcolorbox}    % For beautiful note boxes
 \usepackage[hidelinks]{hyperref} % Keep this last for best compatibility
 \usepackage{graphicx}
+\usepackage{wrapfig}
 
 % 2. FONT SETUP
 \setsansfont{Liberation Sans}
@@ -53,6 +54,11 @@
     \ohead{\SchoolLogo}
     \ofoot{\pagemark}
 }
+\newpairofpagestyles{bibliographystyle}{
+    \ihead{Literaturverzeichnis}
+    \ohead{\SchoolLogo}
+    \ofoot{}
+}
 
 \begin{document}
 
@@ -62,6 +68,7 @@
 	\centering
 	\vspace*{2cm}
 	{\Huge \textbf{\ProjectType}}
+	\vspace*{0.5cm}
 
 	{\Huge \textbf{\ProjectTopic}}
 	\vspace*{5cm}
@@ -110,27 +117,134 @@ Ich habe mich für ein ECS entschieden, da es für mich mehr Vorteile als Nachte
 	\item make
 	\item C/C++ Compiler
 	\item Lualatex Compiler (nur Documentation)
+	\item Helper-Scripts in der Reposetory vorhanden für Win/Linux
 \end{itemize}
 
-\section{Durchfürung}
-Durchfürung
+\begin{myNote}[Achtung]
+	Die Helper-Scripts enthalten keine Möglichkeit diese Documentation zu kompilieren!
+\end{myNote}
 
+\newpage
+\section{Funktionsweise}
+\subsection{ECS}
+\begin{wrapfigure}{r}{0.4\textwidth}
+	\centering
+	\includegraphics[width=0.38\textwidth]{assets/ECS_Simple_Layout.png}
+	\caption{Simples ECS Layout}
+\end{wrapfigure}
+
+Ein ECS ist ein Software-Architekturmuster.
+Es wird häufig in der Videospiel-Entwicklung vorgefunden um Spielwelt Objekte darzustellen.
+Ein ECS besteht meistens aus Entitäten, die aus Datenkomponenten zusammengesetzt sind, als auch Systemen, die auf diesen Komponenten operieren.
+Jede Entität ist nicht durch eine Typen-Hierarchie definiert, sondern durch die, mit diese Entität, verbundenen Komponenten.
+Systeme führen ihre Logiken global über alle Entitäten mit den benötigten Komponenten aus.
+Das verhalten von Entitäten kann dynamisch während das Programm oder Spiel läuft angepasst werden.
+Dies passiert durch Systeme die Komponenten zu den Entitäten hinzufügen, entfernen oder modifizieren.
+
+\subsubsection{Entitäten}
+Eine Entität repräsentiert ein Allzweck Objekt.
+Das kann sein ein Tier, eine Pflanze und der Spieler Charakter.
+Eine Entität besteht aus einer UID oder Unique Identifier.
+Das ist meistens ein Integer Type.
+
+\subsubsection{Komponenten}
+Eine Komponente charakterisiert eine Entität indem sie einen bestimmten Aspekt trägt.
+Dafür hält sie die Daten um diesen Aspekt zu modellieren.
+Zum Beispiel, jedes Objekt, in einer Spielwelt, das Schaden nehmen kann, hat vielleicht eine Lebenskomponente verbunden mit seiner Entität.
+
+\subsubsection{Systeme}
+Ein System ist ein Prozess oder Funktion die über alle Entitäten mit den gewünschten Komponenten agiert.
+Zum Beispiel, ein Physiksystem fragt vielleicht nach Entitäten die Masse-, Beschleunigungs- und Positionskomponenten haben.
+Dann geht es über das Ergebnis und macht seine Physik-Berechnungen für jede Entität mit dem Set an Komponenten.
+
+\subsection{OOP}
+Bei OOP gibt es mehrere Möglichkeiten Spielobjekte darzustellen.
+Zwei werden im folgenden kurz erklärt:
+\begin{itemize}
+	\item Vererbung
+	\item Komposition
+\end{itemize}
+
+\subsubsection{Vererbung}
+Vererbung ist ein Mechanismus.
+Dieser erlaubt es einem, ein Objekt oder eine Klasse auf einer anderen aufzubauen.
+Dadurch kann die „Chield-Class“ Funktion der „Parent-Class“ nutzen ohne sie erneut implementieren zu müssen.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{assets/Inheritance_Layout.png}
+	\caption{Inheritance Layout}
+\end{figure}
+
+\subsubsection{Komposition}
+Komposition ist ein oft genutztes Designmuster.
+Es versucht Wiederverwendung von Code zu erreichen ohne Vererbung zu benötigen.
+Komposition simuliert Vererbung indem die „Chield-Class“ eine Kopie von einer „pseudo-parent“ Klasse als Feld einbindet.
+Dieses Implementiert die gemeinsame Funktionalität der beiden Klassen.
+Anschließend werden Funktionen, die normalerweise auf der „Chield-Class“ aufgerufen werden worden, auf der „Parent-Class“ aufgerufen.
+Dies nennt sich method forwarding.
+
+\newpage
 \section{Fazit}
-\subsection{Gelerntes}
-Gelerntes
-
-\subsection{Probleme}
-Probleme
-
-\subsection{Perspektiven}
-Perspektiven
+Fazit
 
 % --- ANHANG ---
 \newpage
 \appendix
 \pagestyle{appendixstyle}
 \pagenumbering{Roman}
-\section{Anhangs-Abschnitt}
-Test des Anhangs-Layouts.
+\section{Anhang}
+\subsection{Git Repository}
+Die Github Repository finden sie \href{https://github.com/AcaciusFaelan/ecs}{hier}
+
+\subsection{KI benutzung}
+\subsubsection{Coding}
+Ich habe mit GeminiCLI gearbeited um mir Sachen zu erklären und Beispiele für Implementierung zu zeigen.
+GeminiCLI speichert den Chat nicht automatisch und ich das auch nicht eingestellt habe.
+Warum habe ich das nicht?
+Ich habe das ECS größtenteils bevor ich es als Facharbeits Thema gewählt habe schon fertig gehabt.
+Damals habe ich mich nicht darum gekümmert ob ich den Chat noch brauche oder nicht.
+Ich habe GeminiCLI aber gesagt, dass es immer eine Art Log führen soll.
+Deshalb habe ich nur die Zusammengefasste version der Chats in der Datei \textbf{gemini.md}.
+
+\subsubsection{KI generierter Code}
+Alle Tests im \textbf{tests} Ordner sind KI generiert.
+Außerdem ist die Demo in \textbf{src/main.cpp} KI generiert.
+Darüber hinaus ist der Rest von mir geschreiben.
+
+\newpage
+\subsubsection{Dokumentation}
+Alle Texte in dieser Dokumentation habe ich geschreiben.
+KI habe ich für Formale Sachen wie Seitenlayout, Bilder einbinden, etc. verwendet.
+\href{https://gemini.google.com/share/0ec563dbfde2}{Hier} ist der Link zum Chat fals sie den Gesammten Chat sehen möchten.
+Im folgenden sind die wichtigsten Prompts aufgelisted:
+
+\begin{itemize}
+	\item vorgegebene formale Angaben + i want to fulfill the requirements with the least amount fo packages possible
+	\item i want the toc and lot and lof to be interactable
+	\item i also want to use tcolorbox for note boxes etc.
+	\item i want to display this logo in the right header + Schullogo (auffindbar in 'assets/bztg-logo.png)
+	\item can i make tables without the lines
+	\item how do i use lists
+	\item how do i write a hyperlink
+	\item i want to add an image inline beside the text
+\end{itemize}
+
+\newpage
+\pagestyle{bibliographystyle}
+\pagenumbering{arabic}
+\section{Literaturverzeichnis}
+\begin{table}[h]
+    \begin{tabular}{c|c}
+        Quelle & Letzter Zugriff \\
+        \hline
+        \href{https://en.wikipedia.org/wiki/Entity_component_system}{ECS, ECS Simple Layout Image}          & 15.03.2026 \\
+        \href{https://en.wikipedia.org/wiki/Composition_over_inheritance}{Komposition (OOP)}                & 15.03.2026 \\
+        \href{https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)}{Vererbung (OOP)}     & 15.03.2026 \\
+        \href{https://www.geeksforgeeks.org/cpp/what-is-inheritance-1/}{Vererbung Layout Image}             & 15.03.2026 \\
+    \end{tabular}
+    \vspace{0.3cm}
+    \caption{Literaturen}
+\end{table}
 
 \end{document}
