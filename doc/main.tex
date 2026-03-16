@@ -1,6 +1,6 @@
 \documentclass[12pt, a4paper, oneside, ngerman]{scrartcl}
 
-% 1. PACKAGES
+% PACKAGES
 \usepackage[left=3cm, right=3cm, top=3cm, bottom=3cm]{geometry}
 \usepackage{fontspec}
 \usepackage[onehalfspacing]{setspace}
@@ -10,12 +10,14 @@
 \usepackage[hidelinks]{hyperref} % Keep this last for best compatibility
 \usepackage{graphicx}
 \usepackage{wrapfig}
+\usepackage{listing}
+\usepackage{xcolor}
 
-% 2. FONT SETUP
+% FONT SETUP
 \setsansfont{Liberation Sans}
 \renewcommand{\familydefault}{\sfdefault}
 
-% 3. TCOLORBOX SETUP (Minimalist Note Box)
+% TCOLORBOX SETUP (Minimalist Note Box)
 \newtcolorbox{myNote}[1][Hinweis]{
   colback=gray!5,      % Light gray background
   colframe=gray!80,    % Darker gray border
@@ -26,7 +28,25 @@
   boxrule=0.5pt,       % Thin border
 }
 
-% 4. DEFINE METADATA
+% DEFINE CODE STYLE
+\lstset{
+    language=C++,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue!80!black}\bfseries,
+    commentstyle=\color{green!50!black}\itshape,
+    stringstyle=\color{orange},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!2},
+    captionpos=b,
+}
+
+% DEFINE METADATA
 \newcommand{\ProjectType}{PFI Facharbeit}
 \newcommand{\ProjectTopicShort}{ECS}
 \newcommand{\ProjectTopic}{Entity Component System (\ProjectTopicShort)}
@@ -36,7 +56,7 @@
 \newcommand{\ProjectSubject}{Praxis – Fachpraxis Informationstechnik}
 \newcommand{\ProjectStudent}{Noah Kluge}
 
-% 5. HEADER/FOOTER STYLES
+% HEADER/FOOTER STYLES
 \clearpairofpagestyles
 \newpairofpagestyles{directories}{
     \ihead{\ProjectTopicShort}
@@ -90,6 +110,7 @@
 \tableofcontents
 \listoftables
 \listoffigures
+\listoflistings
 
 % --- HAUPTTEIL ---
 \newpage
@@ -111,20 +132,6 @@ Ich habe mich für ein ECS entschieden, da es für mich mehr Vorteile als Nachte
 	Ich werde im Rest dieses Dokuments nur noch die Kurzformen ECS für Entity Component System und OOP für Objekt Orientierte Programmierung.
 \end{myNote}
 
-\subsection{Anforderungen zum ausführen}
-\begin{itemize}
-	\item CMake
-	\item make
-	\item C/C++ Compiler
-	\item Lualatex Compiler (nur Documentation)
-	\item Helper-Scripts in der Reposetory vorhanden für Win/Linux
-\end{itemize}
-
-\begin{myNote}[Achtung]
-	Die Helper-Scripts enthalten keine Möglichkeit diese Documentation zu kompilieren!
-\end{myNote}
-
-\newpage
 \section{Funktionsweise}
 \subsection{ECS}
 \begin{wrapfigure}{r}{0.4\textwidth}
@@ -160,21 +167,34 @@ Dann geht es über das Ergebnis und macht seine Physik-Berechnungen für jede En
 \subsection{OOP}
 Bei OOP gibt es mehrere Möglichkeiten Spielobjekte darzustellen.
 Zwei werden im folgenden kurz erklärt:
+
 \begin{itemize}
 	\item Vererbung
 	\item Komposition
 \end{itemize}
+
+\begin{wrapfigure}{r}{0.6\textwidth}
+	\centering
+	\includegraphics[width=0.58\textwidth]{assets/Inheritance_Layout.png}
+	\caption{Simples Inheritance Layout}
+\end{wrapfigure}
 
 \subsubsection{Vererbung}
 Vererbung ist ein Mechanismus.
 Dieser erlaubt es einem, ein Objekt oder eine Klasse auf einer anderen aufzubauen.
 Dadurch kann die „Chield-Class“ Funktion der „Parent-Class“ nutzen ohne sie erneut implementieren zu müssen.
 
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=0.6\textwidth]{assets/Inheritance_Layout.png}
-	\caption{Inheritance Layout}
-\end{figure}
+\subsubsection{The diamond problem}
+Das Diamantproblem tritt nur bei Vererbung auf.
+Dieses Problem tritt auf, wenn eine Klasse A an eine Klasse B und C vererbt.
+Die Klasse D erbt dann von beiden B und C.
+Klasse A definiert eine Funktion die von B und C überschrieben wird.
+D überschreibt diese Funktion nicht.
+Nun wird die Funktion bei D aufgerufen.
+Welche Funktion soll nun aufgerufen werden?
+Beide B und C haben diese Funktion überschrieben.
+Das Problem wird so genannt, da die Form des Klassen vererbungs Diagramms die Form eines Diamanten hat.
+
 
 \subsubsection{Komposition}
 Komposition ist ein oft genutztes Designmuster.
@@ -184,9 +204,70 @@ Dieses Implementiert die gemeinsame Funktionalität der beiden Klassen.
 Anschließend werden Funktionen, die normalerweise auf der „Chield-Class“ aufgerufen werden worden, auf der „Parent-Class“ aufgerufen.
 Dies nennt sich method forwarding.
 
-\newpage
+\section{Implementierung}
+\subsection{Entity/Komponenten Manager}
+Alle Klassen und Funktionen sind in einem \texttt{namespace} namens \texttt{ecs} definiert.
+
+\subsubsection{definitions.hpp}
+Hier wird der \texttt{Entity}-Typ definiert.
+Hier wird außerdem der Wert \texttt{NULL\_ENTITY} definiert, was der höchst mögliche Wert eines \texttt{uint32\_t} ist.
+Dieser Wert ist $2^{32}-1$.
+
+\subsubsection{sparse\_set.hpp}
+Hier wird die \texttt{SparseSet}-Klasse definiert.
+Das \texttt{SparseSet} ist dafür zuständig, genau einen Komponenten Pool zu speichern.
+Es speichert genau drei \texttt{Vektoren}.
+Einen für die Komponenten namens \texttt{dense}.
+Einen für \texttt{Entity} zu \texttt{Komponenten-Index} namens \texttt{sparse}.
+Und einen für \texttt{Komponenten-Index} zu \texttt{Entity} namens \texttt{indices}.
+Die Klasse besitzt außerdem noch Funktionen um \texttt{Komponenten} hinzuzufügen, sie zu entfernen, sie anzufordern und um abzufragen ob eine \texttt{Entity} sie besitzt.
+
+\subsubsection{Registry.hpp}
+Hier wird die \texttt{Registry} definiert.
+Sie ist dafür zuständig die \texttt{Entities} und die \texttt{SparseSets} zu managen.
+Sie stellt ein Interface bereit um mit den \texttt{SparseSets} zu interagieren.
+Sie speichert für jeden \texttt{Komponenten}-Typ ein \texttt{SparseSet}.
+Die \texttt{Registry} erstellt immer nur dann eine \texttt{SparseSet}, wenn der \texttt{Komponenten}-Typ noch nicht vorhanden ist.
+Diese Klasse besitzt, wie auch die \texttt{SparseSet}-Klasse, Funktionen zum hinzufügen, entfernen, anfordern und abfragen von \texttt{Komponenten}.
+Darüberhinaus besitzt sie noch Funktionen um \texttt{Entities} zu erstellen und um \texttt{Views} zu erstelle.
+
+\subsubsection{view.hpp}
+Hier wird die \texttt{View}-Klasse definiert.
+Sie ist nur interesant für \texttt{Systems}.
+Die \texttt{View}-Klasse nimmt sich ein oder mehrere gewünschte \texttt{SparseSets} von der \texttt{Registry} und fürt eine, als Funktionsargument verpackte, Funktion für die \texttt{SparseSets} aus.
+Diese Klasse wird nicht manuel konstruiert.
+Die \texttt{Registry} stellt dafür eine Funktion bereit.
+
+\subsection{Komponenten}
+\texttt{Komponenten} sind einfache C++ \texttt{Strukturen}.
+Diese können alle möglichen Felder beinhalten.
+
+\subsection{Systeme}
+\texttt{Systeme} sind einfache C++ \texttt{Funktionen}.
+Diese nehmen als Argument einen \texttt{Reference} zur \texttt{Registry} auf der sie operieren sollen.
+Oder sie können auch einfach die Argumente (\texttt{Entity, Comp1, Comp2, ...}) nehmen.
+Zurück geben diese \texttt{Funktionen} nichts, da sie ja nur mit den \texttt{Komponenten} operationen anstellen.
+
 \section{Fazit}
-Fazit
+\subsection{Was habe ich gelernt?}
+Mit der durchführung dieser Facharbeit habe ich viel im bereich der Spieleentwicklung gelernt.
+Mehr spezifisch das effiziente speichern von Spielobjekten einer Spielwelt.
+Ich habe die Unterschied zwischen einem ECS und dem OOP kennengelernt.
+Außerdem habe ich gelernt welches Problem das ECS löst welches bei der OOP auftreten kann.
+In C++ habe ich viel über \texttt{generic types} gelernt, da ich viel mit denen arbeiten musste.
+Durch dieses Projekt habe ich auch ein bisschen CMake gelernt.
+
+\subsection{Probleme}
+Probleme hatte ich wärend der Facharbeit nicht.
+Die meistem Probleme sind aufgetreten, bevor ich dieses Projekt zu meiner Facharbeit gemacht habe.
+Ich musste erstmal überhaupt schauen, wie ich \texttt{generic-types} in C++ verwende.
+Der Rest war eigentlich nur im Internet suchen, oder eher KI für mich suchen lassen, nach der Logik, wie das alles intern funktioniert.
+
+\subsection{Neue Perspektiven}
+Ich hatte den ganzen Code schon sehr früh fertig.
+Ich habe mir dann angeschaut wie ich so etwas in der Programmiersprache Rust umsetzen kann.
+Dadurch habe ich gefallen an Rust gefunden und habe ein ECS in Rust implementiert, was sehr viel schwieriger ist.
+Jetzt bin ich gerade WGPU, eine Graphics API, in Rust am lernen, da mir Rust programmierung sehr viel spaß macht.
 
 % --- ANHANG ---
 \newpage
@@ -195,7 +276,26 @@ Fazit
 \pagenumbering{Roman}
 \section{Anhang}
 \subsection{Git Repository}
-Die Github Repository finden sie \href{https://github.com/AcaciusFaelan/ecs}{hier}
+Die Github Repository finden sie hier: \href{https://github.com/AcaciusFaelan/ecs}{github.com}
+
+\subsection{Code}
+\lstinputlisting[caption={definitions.hpp}]{../src/ecs/definitions.hpp}
+\lstinputlisting[caption={sparse\_set.hpp}]{../src/ecs/sparse_set.hpp}
+\lstinputlisting[caption={registry.hpp}]{../src/ecs/registry.hpp}
+\lstinputlisting[caption={view.hpp}]{../src/ecs/view.hpp}
+
+\subsection{Anforderungen zum ausführen}
+\begin{itemize}
+	\item CMake
+	\item make
+	\item C/C++ Compiler
+	\item Lualatex Compiler (nur Documentation)
+	\item Helper-Scripts in der Reposetory vorhanden für Win/Linux
+\end{itemize}
+
+\begin{myNote}[Achtung]
+	Die Helper-Scripts enthalten keine Möglichkeit diese Documentation zu kompilieren!
+\end{myNote}
 
 \subsection{KI benutzung}
 \subsubsection{Coding}
@@ -216,7 +316,8 @@ Darüber hinaus ist der Rest von mir geschreiben.
 \subsubsection{Dokumentation}
 Alle Texte in dieser Dokumentation habe ich geschreiben.
 KI habe ich für Formale Sachen wie Seitenlayout, Bilder einbinden, etc. verwendet.
-\href{https://gemini.google.com/share/0ec563dbfde2}{Hier} ist der Link zum Chat fals sie den Gesammten Chat sehen möchten.
+Hier ist der Link zum Chat fals sie den Gesammten Chat sehen möchten: \href{https://gemini.google.com/share/0ec563dbfde2}{gemini.google.com}
+
 Im folgenden sind die wichtigsten Prompts aufgelisted:
 
 \begin{itemize}
@@ -238,13 +339,23 @@ Im folgenden sind die wichtigsten Prompts aufgelisted:
     \begin{tabular}{c|c}
         Quelle & Letzter Zugriff \\
         \hline
-        \href{https://en.wikipedia.org/wiki/Entity_component_system}{ECS, ECS Simple Layout Image}          & 15.03.2026 \\
-        \href{https://en.wikipedia.org/wiki/Composition_over_inheritance}{Komposition (OOP)}                & 15.03.2026 \\
-        \href{https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)}{Vererbung (OOP)}     & 15.03.2026 \\
-        \href{https://www.geeksforgeeks.org/cpp/what-is-inheritance-1/}{Vererbung Layout Image}             & 15.03.2026 \\
+        \href{https://en.wikipedia.org/wiki/Entity_component_system}{ECS, ECS Simple Layout Image}          & 16.03.2026 \\
+        \href{https://en.wikipedia.org/wiki/Composition_over_inheritance}{Komposition (OOP)}                & 16.03.2026 \\
+        \href{https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)}{Vererbung (OOP)}     & 16.03.2026 \\
+        \href{https://www.geeksforgeeks.org/cpp/what-is-inheritance-1/}{Vererbung Layout Image}             & 16.03.2026 \\
+        \href{https://gemini.google.com/share/0ec563dbfde2}{Gemini}                                         & 16.03.2026 \\
     \end{tabular}
     \vspace{0.3cm}
     \caption{Literaturen}
 \end{table}
+
+\newpage
+\pagestyle{empty}
+\section{Erklärung}
+Ich erkläre, dass ich die Facharbeit ohne fremde Hilfe angefertigt und nur die im Literaturverzeichnis aufgeführten Quellen und Hilfsmittel benutzt habe.
+Die Stellen der Facharbeit, die aus anderen Werken oder Quellen entnommen wurden, habe ich unter Angabe der Quelle kenntlich gemacht.
+Ebenso wurde die Verwendung von KI unter Angabe des Prompts kenntlich gemacht.
+
+Mit der schulinternen Veröffentlichung erkläre ich mich nicht einverstanden.
 
 \end{document}
